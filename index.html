@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Calau Formación">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#1a5ca8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="apple-touch-icon.png">
+<title>Calau · Formación</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#f5f5f5;--bg-card:#fff;--text:#222;--border:#ddd;--header:#1a2a3a;--accent:#1a5ca8;--accent-dark:#134a8e;--accent-light:#e8f0fb;}
+body.dark{--bg:#0d1117;--bg-card:#161b22;--text:#f0f0f0;--border:#30363d;--header:#0a0f14;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);overscroll-behavior:none;transition:background .3s,color .3s;}
+.screen{display:none;min-height:100vh;min-height:-webkit-fill-available;flex-direction:column;}
+.screen.active{display:flex;animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+#home{background:#fff;align-items:center;justify-content:center;text-align:center;padding:40px 40px 0;height:100vh;height:-webkit-fill-available;overflow:hidden;margin-bottom:-100px;padding-bottom:100px;}
+.home-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;width:100%;}
+.home-strip-wrap{width:100%;overflow:hidden;flex:1;display:flex;align-items:flex-end;background:#fff;margin:0 -40px;}
+.home-strip{display:flex;gap:10px;animation:strip-scroll 32s linear infinite;width:100%;align-items:flex-end;padding:0 20px;}
+.home-strip img{flex-shrink:0;object-fit:cover;border-radius:10px;height:150px;width:auto;aspect-ratio:4/3;}
+@keyframes strip-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+#list{background:#f5f5f5;height:100vh;height:-webkit-fill-available;overflow:hidden;}
+.home-logo img{width:160px;height:160px;object-fit:cover;border-radius:28px;box-shadow:0 8px 32px rgba(0,0,0,.15);margin-bottom:24px;}
+.home-title{font-size:36px;font-weight:bold;margin-bottom:6px;color:#111;}
+.home-sub{font-size:14px;color:#666;margin-bottom:6px;}
+.home-loc{font-size:12px;color:#999;margin-bottom:24px;}
+.home-buttons{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;}
+.btn-main{background:#1a5ca8;color:#fff;border:none;padding:14px 40px;font-size:16px;font-weight:bold;border-radius:6px;cursor:pointer;width:100%;transition:background .15s,transform .1s;}
+.btn-main:hover{background:#134a8e;}
+.btn-main:active{transform:scale(.97);}
+.btn-secondary{background:none;color:#1a5ca8;border:2px solid #1a5ca8;padding:14px 40px;font-size:16px;font-weight:bold;border-radius:6px;cursor:pointer;width:100%;transition:background .15s;}
+.btn-secondary:hover{background:#e8f0fb;}
+.btn-tertiary{background:none;color:#555;border:1px solid #ccc;padding:10px 40px;font-size:14px;border-radius:6px;cursor:pointer;width:100%;transition:background .15s;}
+.btn-tertiary:hover{background:#f0f0f0;}
+.btn-danger{background:#c00;color:#fff;border:none;padding:7px 14px;font-size:12px;border-radius:4px;cursor:pointer;}
+.btn-danger:hover{background:#900;}
+.home-stats{margin-top:20px;display:flex;gap:40px;justify-content:center;color:#999;font-size:13px;}
+.home-stats strong{display:block;font-size:22px;font-weight:bold;color:#1a5ca8;margin-bottom:2px;}
+.list-header{background:#1a2a3a;padding:16px 20px;display:flex;align-items:center;gap:14px;}
+.back-btn{background:none;border:none;color:#fff;cursor:pointer;font-size:20px;}
+.search-wrap{flex:1;position:relative;}
+.search-wrap input{width:100%;background:#fff;border:1px solid #ddd;color:#222;padding:10px 14px 10px 38px;border-radius:4px;font-size:14px;outline:none;}
+.s-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#aaa;font-size:14px;}
+.dark-toggle{position:relative;width:44px;height:24px;background:#444;border:none;border-radius:12px;cursor:pointer;transition:background .3s;flex-shrink:0;}
+.dark-toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .3s;display:block;}
+body.dark .dark-toggle{background:#1a5ca8;}
+body.dark .dark-toggle-thumb{transform:translateX(20px);}
+.cat-bar{padding:12px 20px;display:flex;gap:8px;flex-wrap:wrap;background:#fff;border-bottom:1px solid #ddd;}
+body.dark .cat-bar{background:#0d1117;border-color:#30363d;}
+.cat-btn{padding:6px 14px;border-radius:4px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;color:#555;}
+.cat-btn.active,.cat-btn:hover{background:#1a5ca8;color:#fff;border-color:#1a5ca8;}
+body.dark .cat-btn{background:#161b22;color:#8b949e;border-color:#30363d;}
+.recipe-grid{padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;}
+.recipe-card{background:#fff;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid #ddd;transition:box-shadow .2s,transform .1s;display:flex;flex-direction:column;}
+.recipe-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.recipe-card:active{transform:scale(.98);}
+body.dark .recipe-card{background:#1c2128;border-color:#30363d;}
+.card-top{height:140px;position:relative;overflow:hidden;background:#eee;flex-shrink:0;}
+.card-top img{width:100%;height:100%;object-fit:cover;}
+.card-top .no-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;background:#e8f0fb;}
+body.dark .card-top{background:#161b22;}
+body.dark .no-img{background:#1c2128;color:#555;}
+.card-cat-tag{position:absolute;top:7px;right:7px;background:#1a5ca8;color:#fff;font-size:9px;text-transform:uppercase;padding:2px 6px;border-radius:2px;}
+.video-badge{position:absolute;bottom:7px;left:7px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:2px 6px;border-radius:2px;}
+.card-body{padding:12px 14px 8px;}
+.card-title{font-size:15px;font-weight:bold;margin-bottom:4px;color:#111;}
+body.dark .card-title{color:#f0f0f0;}
+.card-meta{display:flex;gap:12px;font-size:11px;color:#888;}
+.card-desc{font-size:12px;color:#888;line-height:1.4;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-missing{padding:4px 10px 8px;display:flex;flex-wrap:wrap;gap:4px;}
+.miss-tag{font-size:10px;background:#fff8e1;color:#7a5800;border:1px solid #f0c040;border-radius:3px;padding:2px 6px;}
+body.dark .miss-tag{background:#2a2000;color:#f0c040;border-color:#6b5200;}
+.no-results{grid-column:1/-1;text-align:center;padding:40px;color:#aaa;}
+#detail{background:#f5f5f5;}
+body.dark #detail{background:#0d1117;}
+.detail-header{background:#1a2a3a;padding:16px 20px;display:flex;align-items:center;gap:14px;}
+.detail-header span{color:#aaa;font-size:12px;}
+.detail-img-wrap{width:100%;height:280px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.detail-img-wrap img{height:100%;width:33.33%;object-fit:contain;flex-shrink:0;}
+.detail-img-wrap img:not(:nth-child(2)){opacity:.35;filter:blur(1px);}
+.detail-hero{background:#fff;padding:20px;border-bottom:1px solid #ddd;}
+body.dark .detail-hero{background:#161b22;border-color:#21262d;}
+.d-cat{color:#1a5ca8;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.d-title{font-size:26px;font-weight:bold;color:#111;margin-bottom:10px;}
+body.dark .d-title{color:#f0f0f0;}
+.d-desc{font-size:14px;color:#666;margin-bottom:10px;line-height:1.5;}
+body.dark .d-desc{color:#999;}
+.d-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.dbadge{background:#f0f0f0;border:1px solid #ddd;padding:4px 10px;border-radius:4px;font-size:12px;color:#444;}
+body.dark .dbadge{background:#1c2128;color:#aaa;border-color:#30363d;}
+.detail-body{padding:0 20px 140px;}
+body.dark .detail-body{background:#0d1117;}
+.section-block{margin-top:20px;}
+body.dark .section-block{background:#0d1117;}
+.sec-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:10px;font-weight:bold;padding-bottom:6px;border-bottom:2px solid #ddd;}
+body.dark .sec-label{color:#ccc;border-color:#21262d;}
+.sec-num{display:inline-block;width:20px;height:20px;background:#1a5ca8;color:#fff;border-radius:50%;font-size:10px;font-weight:bold;text-align:center;line-height:20px;margin-right:6px;}
+.ing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.ing-item{background:#fff;border:1px solid #d0d0d0;padding:12px 14px;border-radius:8px;display:flex;flex-direction:column;gap:4px;border-left:4px solid #1a5ca8;box-shadow:0 2px 6px rgba(0,0,0,.07);}
+body.dark .ing-item{background:#1c2128;border-color:#30363d;}
+.ing-name{font-size:13px;color:#333;line-height:1.4;font-weight:500;}
+body.dark .ing-name{color:#ccc;}
+.step-item{display:flex;gap:12px;margin-bottom:10px;background:#fff;padding:12px;border-radius:8px;border:1px solid #ddd;}
+body.dark .step-item{background:#1c2128;border-color:#21262d;}
+.step-num{width:28px;height:28px;background:#1a5ca8;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;flex-shrink:0;}
+.step-text{font-size:14px;line-height:1.6;padding-top:3px;}
+body.dark .step-text{color:#ddd;}
+.player-bar{background:#1a2a3a;padding:14px 20px;display:flex;align-items:center;gap:14px;position:fixed;bottom:0;left:0;right:0;z-index:50;}
+.play-btn{width:44px;height:44px;background:#1a5ca8;color:#fff;border:none;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0;transition:background .15s,transform .1s;}
+.play-btn:active{transform:scale(.92);}
+.p-info{flex:1;}
+.p-label{color:#8b949e;font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+.p-status{color:#fff;font-size:12px;margin-top:2px;}
+.prog-bar{height:3px;background:#2d3f52;border-radius:2px;margin-top:5px;overflow:hidden;}
+.prog-fill{height:100%;background:#1a5ca8;border-radius:2px;width:0%;transition:width .3s;}
+.spd-btn{background:#2d3f52;color:#ccc;border:none;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:11px;}
+.spd-btn.on{background:#1a5ca8;color:#fff;}
+.quiz-btn-bar{background:#0f3a6e;padding:8px 20px;display:flex;gap:8px;position:fixed;bottom:76px;left:0;right:0;z-index:49;}
+.carousel{margin-top:20px;background:#fff;border:1px solid #ddd;border-radius:12px;overflow:hidden;max-width:480px;margin-left:auto;margin-right:auto;}
+body.dark .carousel{background:#161b22;border-color:#21262d;}
+.car-photo{position:relative;background:#e8e8e8;aspect-ratio:1/1;width:100%;display:flex;align-items:center;justify-content:center;}
+.car-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.car-no-photo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#999;}
+.car-no-photo svg{opacity:.4;}
+.car-no-photo span{font-size:12px;opacity:.5;}
+.car-badge{position:absolute;top:12px;left:12px;background:#1a5ca8;color:#fff;font-size:11px;font-weight:bold;padding:4px 12px;border-radius:20px;}
+.car-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;}
+.car-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .2s;}
+.car-dot.active{background:#fff;}
+.car-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.92);border:none;border-radius:50%;width:48px;height:48px;color:#333;font-size:28px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.car-arrow.left{left:12px;}
+.car-arrow.right{right:12px;}
+.car-body{padding:14px 18px 18px;}
+.car-step-label{font-size:11px;color:#1a5ca8;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.car-step-text{font-size:14px;color:#222;line-height:1.6;}
+body.dark .car-step-text{color:#ddd;}
+#admin{background:#f5f5f5;}
+body.dark #admin{background:#0d1117;}
+.admin-header{background:#1a2a3a;padding:16px 20px;display:flex;align-items:center;gap:14px;}
+.admin-header h2{color:#fff;font-size:16px;font-weight:bold;flex:1;margin:0;}
+.admin-body{padding:20px;max-width:800px;margin:0 auto;}
+.admin-section{background:#fff;border-radius:8px;border:1px solid #ddd;margin-bottom:20px;overflow:hidden;}
+body.dark .admin-section{background:#161b22;border-color:#30363d;}
+.admin-section-title{background:#f8f8f8;padding:12px 16px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;color:#666;border-bottom:1px solid #ddd;}
+body.dark .admin-section-title{background:#0d1117;color:#aaa;border-color:#30363d;}
+.admin-form{padding:16px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-row.full{grid-template-columns:1fr;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group label{font-size:11px;font-weight:bold;color:#555;text-transform:uppercase;letter-spacing:.5px;}
+body.dark .form-group label{color:#aaa;}
+.form-group input,.form-group select,.form-group textarea{border:1px solid #ddd;border-radius:4px;padding:8px 10px;font-size:14px;outline:none;font-family:inherit;background:#fff;color:#222;}
+body.dark .form-group input,body.dark .form-group select,body.dark .form-group textarea{background:#0d1117;color:#f0f0f0;border-color:#30363d;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#1a5ca8;}
+.form-group textarea{resize:vertical;min-height:60px;}
+.ing-list,.step-list,.quiz-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.ing-row{display:flex;gap:8px;align-items:center;}
+.ing-row input{flex:1;border:1px solid #ddd;border-radius:4px;padding:7px 10px;font-size:13px;outline:none;background:#fff;color:#222;}
+body.dark .ing-row input{background:#0d1117;color:#f0f0f0;border-color:#30363d;}
+.del-btn{background:#fee;border:1px solid #fcc;color:#c00;border-radius:4px;width:28px;height:28px;cursor:pointer;font-size:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.add-btn{background:#f5f5f5;border:1px dashed #ccc;color:#666;padding:7px 14px;border-radius:4px;cursor:pointer;font-size:12px;width:100%;}
+.add-btn:hover{border-color:#1a5ca8;color:#1a5ca8;}
+.photo-btn{background:#f0f0f0;border:1px solid #ddd;color:#444;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:11px;white-space:nowrap;}
+.btn-save{background:#1a5ca8;color:#fff;border:none;padding:12px 32px;font-size:15px;font-weight:bold;border-radius:6px;cursor:pointer;width:100%;transition:background .15s;}
+.btn-save:hover{background:#134a8e;}
+.admin-recipe-list{padding:0;}
+.admin-recipe-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #eee;}
+body.dark .admin-recipe-item{border-color:#21262d;}
+.admin-recipe-item:last-child{border-bottom:none;}
+.admin-recipe-emoji{font-size:24px;width:36px;text-align:center;}
+.admin-recipe-info{flex:1;}
+.admin-recipe-name{font-size:14px;font-weight:bold;color:#222;}
+body.dark .admin-recipe-name{color:#f0f0f0;}
+.admin-recipe-cat{font-size:11px;color:#888;}
+.admin-recipe-actions{display:flex;gap:6px;}
+.btn-edit{background:#e8f0fb;border:1px solid #b0c8e8;color:#1a5ca8;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:11px;}
+.toast{position:fixed;bottom:160px;left:50%;transform:translateX(-50%);background:#1a2a3a;color:#fff;padding:10px 20px;border-radius:6px;font-size:13px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+.step-photo-row{display:flex;gap:8px;align-items:flex-start;margin-top:4px;}
+.step-thumb{width:48px;height:48px;object-fit:cover;border-radius:4px;border:1px solid #ddd;flex-shrink:0;}
+.step-add-photo{width:48px;height:48px;border:1px dashed #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:#aaa;flex-shrink:0;}
+/* QUIZ SCREEN */
+#quiz{background:#f5f5f5;}
+body.dark #quiz{background:#0d1117;}
+.quiz-q-card{background:#fff;border-radius:12px;padding:24px;margin:20px;box-shadow:0 2px 12px rgba(0,0,0,.08);}
+body.dark .quiz-q-card{background:#161b22;}
+.quiz-q-text{font-size:17px;font-weight:600;color:#111;margin-bottom:20px;line-height:1.5;}
+body.dark .quiz-q-text{color:#f0f0f0;}
+.quiz-option{display:block;width:100%;text-align:left;background:#f5f5f5;border:2px solid #e0e0e0;border-radius:8px;padding:14px 16px;margin-bottom:10px;font-size:14px;cursor:pointer;transition:all .15s;}
+.quiz-option:hover{border-color:#1a5ca8;background:#e8f0fb;}
+.quiz-option.correct{border-color:#2e7d32;background:#e8f5e9;color:#1b5e20;}
+.quiz-option.wrong{border-color:#c00;background:#ffebee;color:#900;}
+body.dark .quiz-option{background:#1c2128;border-color:#30363d;color:#f0f0f0;}
+.quiz-result-box{background:#fff;border-radius:12px;padding:32px 24px;margin:20px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08);}
+body.dark .quiz-result-box{background:#161b22;}
+/* CARD SCREEN */
+#card{background:#f5f5f5;}
+body.dark #card{background:#0d1117;}
+.card-screen-body{padding:20px;max-width:600px;margin:0 auto;}
+.card-preview{background:#fff;border-radius:12px;padding:24px;border:2px solid #1a5ca8;margin-top:16px;}
+body.dark .card-preview{background:#161b22;border-color:#1a5ca8;}
+.card-emp-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #1a5ca8;}
+.card-emp-initials{width:80px;height:80px;border-radius:50%;background:#1a5ca8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;flex-shrink:0;}
+.training-check-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eee;font-size:13px;}
+body.dark .training-check-item{border-color:#30363d;color:#ccc;}
+/* PIN MODAL */
+.pin-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:400;align-items:center;justify-content:center;}
+.pin-overlay.show{display:flex;}
+.pin-box{background:#fff;border-radius:16px;padding:32px 24px;max-width:300px;width:90%;text-align:center;}
+body.dark .pin-box{background:#161b22;}
+.pin-dots{display:flex;justify-content:center;gap:14px;margin:16px 0;}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:#ddd;transition:background .2s;}
+.pin-dot.filled{background:#1a5ca8;}
+.pin-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:220px;margin:0 auto 16px;}
+.pin-key{background:#f5f5f5;border:1px solid #ddd;border-radius:10px;padding:16px;font-size:20px;font-weight:bold;cursor:pointer;transition:background .1s;}
+.pin-key:active{background:#e8f0fb;}
+body.dark .pin-key{background:#1c2128;border-color:#30363d;color:#f0f0f0;}
+/* MODO/DISPLAY TOGGLE */
+.display-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.dtog-btn{padding:8px 16px;border-radius:6px;border:2px solid #ddd;background:#fff;cursor:pointer;font-size:13px;color:#555;transition:all .15s;}
+.dtog-btn.active{border-color:#1a5ca8;background:#e8f0fb;color:#1a5ca8;font-weight:bold;}
+body.dark .dtog-btn{background:#1c2128;border-color:#30363d;color:#aaa;}
+body.dark .dtog-btn.active{border-color:#1a5ca8;background:#0f2a4a;color:#4d8fd4;}
+/* VIDEO QUIZ en edit form */
+.quiz-q-row{background:#f8f8f8;border:1px solid #ddd;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;}
+body.dark .quiz-q-row{background:#1c2128;border-color:#30363d;}
+.quiz-opt-row{display:flex;gap:6px;align-items:center;}
+.quiz-opt-row input[type=text]{flex:1;}
+.quiz-opt-row input[type=radio]{width:16px;height:16px;flex-shrink:0;accent-color:#1a5ca8;}
+@media(max-width:600px){
+  .recipe-grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:10px;}
+  .detail-img-wrap{max-height:200px;}
+  #home{padding:24px 16px;}
+  .home-logo img{width:120px;height:120px;}
+  .home-title{font-size:28px;}
+  .btn-main{padding:12px 28px;font-size:15px;}
+  .ing-grid{grid-template-columns:repeat(2,1fr);}
+  .admin-form .form-row{grid-template-columns:1fr;}
+}
+@media print{
+  body *{display:none!important;}
+  #print-card{display:block!important;}
+}
+</style>
+<script>
+const SUPA_URL="https://mbvmvzmjpiofxkukdxyb.supabase.co";
+const SUPA_KEY="sb_publishable_avKRxfagFn9yQ8tx0qfQHw_1WnnLxHr";
+let supa=null;
+const _sh={"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json"};
+function initSupa(){}
+</script>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-inner">
+    <div class="home-logo"><img src="apple-touch-icon.png" alt="Logo" onerror="this.style.display='none'"></div>
+    <div class="home-title">Calau</div>
+    <p class="home-sub">Formación Interna · Equipo</p>
+    <p class="home-loc">📍 Les Voltes, 2 · Calella de Palafrugell</p>
+    <div class="home-buttons">
+      <button class="btn-main" onclick="show('list')">📚 Formaciones</button>
+      <button class="btn-secondary" onclick="requirePin(()=>show('admin'))">➕ Nueva Formación</button>
+      <button class="btn-tertiary" onclick="show('card')">📇 Tarjeta de Empleado</button>
+    </div>
+    <div class="home-stats"><div><strong id="sc">0</strong><span>Formaciones</span></div><div><strong id="scat">0</strong><span>Áreas</span></div></div>
+    <div id="sync-status" style="font-size:11px;color:#aaa;margin-top:8px;height:16px;"></div>
+  </div>
+  <div class="home-strip-wrap"><div class="home-strip" id="home-strip"></div></div>
+</div>
+
+<!-- LIST -->
+<div id="list" class="screen">
+  <div class="list-header">
+    <button class="back-btn" onclick="show('home')">←</button>
+    <div class="search-wrap"><span class="s-icon">🔍</span><input type="text" placeholder="Buscar formación..." id="searchInput" oninput="render()"></div>
+    <button onclick="toggleDark()" class="dark-toggle" title="Modo oscuro"><span class="dark-toggle-thumb"></span></button>
+  </div>
+  <div class="cat-bar" id="cat-bar"></div>
+  <div class="recipe-grid" id="grid"></div>
+</div>
+
+<!-- DETAIL -->
+<div id="detail" class="screen">
+  <div class="detail-header">
+    <button class="back-btn" onclick="show('list')" style="color:#fff;font-size:20px;">←</button>
+    <span>CALAU · FORMACIÓN</span>
+    <div style="display:flex;gap:8px;margin-left:auto;">
+      <button onclick="requirePin(editCurrentRecipe)" style="background:none;border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px;">✏️ Editar</button>
+      <button onclick="copyRecipe()" style="background:none;border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px;">📋 Copiar</button>
+    </div>
+  </div>
+  <div id="detail-content"></div>
+  <div class="quiz-btn-bar" id="quiz-btn-bar" style="display:none;">
+    <button onclick="openQuiz()" style="background:#1a5ca8;color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:14px;font-weight:bold;cursor:pointer;flex:1;">🧠 Hacer Quiz</button>
+  </div>
+  <div class="player-bar">
+    <button class="play-btn" id="pbtn" onclick="togglePlay()">▶</button>
+    <div class="p-info">
+      <div class="p-label">Narración de voz</div>
+      <div class="p-status" id="pstatus">Pulsa play para escuchar</div>
+      <div class="prog-bar"><div class="prog-fill" id="pfill"></div></div>
+    </div>
+    <button class="spd-btn on" id="sbtn" onclick="toggleSpeed()">1×</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" class="screen">
+  <div class="admin-header" id="admin-header-bar">
+    <button class="back-btn" id="admin-back-btn" onclick="show('home')">←</button>
+    <h2 id="admin-header-title">➕ Nueva Formación</h2>
+    <button onclick="downloadBackup()" style="background:none;border:1px solid rgba(255,255,255,.3);color:#aaa;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;margin-left:auto;">💾 Backup</button>
+  </div>
+  <div id="edit-mode-banner" style="display:none;background:#1a5ca8;color:#fff;padding:10px 20px;font-size:13px;font-weight:bold;align-items:center;gap:10px;">
+    <span>✏️ Editando: <span id="edit-mode-name"></span></span>
+    <button onclick="cancelEdit()" style="margin-left:auto;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.5);color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">✕ Cancelar</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-section" id="admin-list-section">
+      <div class="admin-section-title">📋 Formaciones añadidas</div>
+      <div class="admin-recipe-list" id="admin-recipe-list"></div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title" id="admin-form-title">➕ Nueva formación</div>
+      <div class="admin-form">
+        <input type="hidden" id="edit-id">
+        <div class="form-row">
+          <div class="form-group"><label>Nombre *</label><input type="text" id="f-name" placeholder="Nombre de la formación"></div>
+          <div class="form-group"><label>Área *</label>
+            <select id="f-cat"><option value="General">General</option><option value="Cocina">Cocina</option><option value="Sala">Sala</option><option value="Almacén">Almacén</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Emoji</label><input type="text" id="f-emoji" placeholder="📋"></div>
+          <div class="form-group"><label>Duración estimada</label><input type="text" id="f-yield" placeholder="ej: 15 minutos"></div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group"><label>Descripción</label><textarea id="f-desc" placeholder="Descripción breve de la formación"></textarea></div>
+        </div>
+        <!-- MOSTRAR EN DETALLE -->
+        <div class="form-row full">
+          <div class="form-group">
+            <label>¿Qué mostrar en el detalle?</label>
+            <div class="display-toggle" id="display-toggle">
+              <button type="button" class="dtog-btn active" data-val="carousel" onclick="toggleDisplay('carousel')">📷 Carrusel</button>
+              <button type="button" class="dtog-btn" data-val="video" onclick="toggleDisplay('video')">▶ Vídeo</button>
+              <button type="button" class="dtog-btn" data-val="both" onclick="toggleDisplay('both')">Ambos</button>
+              <button type="button" class="dtog-btn" data-val="none" onclick="toggleDisplay('none')">Ninguno</button>
+            </div>
+          </div>
+        </div>
+        <!-- VIDEO URL -->
+        <div class="form-row full" id="video-url-row">
+          <div class="form-group">
+            <label>Vídeo (URL YouTube o Drive)</label>
+            <input type="text" id="f-video" placeholder="https://youtube.com/...">
+          </div>
+        </div>
+        <!-- FOTO PRINCIPAL -->
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Foto principal</label>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:4px;flex-wrap:wrap;">
+              <img id="f-img-preview" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #ddd;display:none;">
+              <div id="f-img-placeholder" style="width:60px;height:60px;background:#e8f0fb;border:1px dashed #9bb8d8;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:24px;">📷</div>
+              <label class="photo-btn" style="cursor:pointer;">📷 Cámara<input type="file" accept="image/*" capture="environment" style="display:none;" onchange="loadMainPhoto(event)"></label>
+              <label class="photo-btn" style="cursor:pointer;">🖼️ Galería<input type="file" accept="image/*" style="display:none;" onchange="loadMainPhoto(event)"></label>
+            </div>
+          </div>
+        </div>
+        <!-- MATERIALES -->
+        <div class="admin-section-title" style="margin:16px -16px 10px;padding-left:16px;">🔧 Materiales necesarios</div>
+        <div class="ing-list" id="ing-list"></div>
+        <button class="add-btn" onclick="addIng()">+ Añadir material</button>
+        <!-- PASOS -->
+        <div class="admin-section-title" style="margin:20px -16px 10px;padding-left:16px;">📋 Pasos de la formación</div>
+        <div class="step-list" id="step-list"></div>
+        <button class="add-btn" onclick="addStep()">+ Añadir paso</button>
+        <!-- QUIZ -->
+        <div class="admin-section-title" style="margin:20px -16px 10px;padding-left:16px;">🧠 Preguntas Quiz <span style="font-weight:normal;text-transform:none;font-size:11px;">(opcional)</span></div>
+        <div class="quiz-list" id="quiz-list"></div>
+        <button class="add-btn" onclick="addQuizQ()">+ Añadir pregunta</button>
+        <!-- PIN SETTINGS -->
+        <div class="admin-section-title" style="margin:20px -16px 10px;padding-left:16px;">🔐 PIN de acceso</div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input type="password" id="new-pin" placeholder="Nuevo PIN (4 dígitos)" maxlength="4" inputmode="numeric" style="border:1px solid #ddd;border-radius:4px;padding:8px 10px;font-size:14px;outline:none;width:180px;">
+          <button onclick="savePin()" style="background:#1a5ca8;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;">Guardar PIN</button>
+        </div>
+        <p style="font-size:11px;color:#888;margin-top:6px;">PIN actual: <span id="pin-display"></span></p>
+        <!-- GUARDAR -->
+        <div style="margin-top:20px;">
+          <button class="btn-save" id="btn-save-recipe" onclick="saveRecipe()">💾 Guardar formación</button>
+          <button id="btn-cancel-form" onclick="resetAdminForm()" style="margin-top:8px;width:100%;background:none;border:none;color:#999;cursor:pointer;font-size:12px;">Cancelar y limpiar formulario</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz" class="screen">
+  <div class="detail-header">
+    <button class="back-btn" onclick="show('detail')" style="color:#fff;font-size:20px;">←</button>
+    <span id="quiz-title-bar">QUIZ</span>
+    <span id="quiz-progress" style="margin-left:auto;color:#aaa;font-size:12px;"></span>
+  </div>
+  <div id="quiz-body" style="flex:1;overflow-y:auto;"></div>
+</div>
+
+<!-- CARD SCREEN -->
+<div id="card" class="screen">
+  <div class="detail-header">
+    <button class="back-btn" onclick="show('home')" style="color:#fff;font-size:20px;">←</button>
+    <span>TARJETA DE EMPLEADO</span>
+    <button onclick="printCard()" style="margin-left:auto;background:#1a5ca8;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;">🖨️ Imprimir</button>
+  </div>
+  <div class="card-screen-body" style="overflow-y:auto;flex:1;">
+    <div class="admin-section">
+      <div class="admin-section-title">Datos del empleado</div>
+      <div class="admin-form">
+        <div class="form-row">
+          <div class="form-group"><label>Nombre completo</label><input type="text" id="card-name" placeholder="Nombre Apellido" oninput="renderCardPreview()"></div>
+          <div class="form-group"><label>Cargo / Área</label>
+            <select id="card-role" onchange="renderCardPreview()">
+              <option>Sala</option><option>Cocina</option><option>Almacén</option><option>General</option><option>Responsable</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label>Foto del empleado</label>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:4px;">
+              <img id="card-photo-preview" style="width:60px;height:60px;object-fit:cover;border-radius:50%;border:2px solid #1a5ca8;display:none;">
+              <label class="photo-btn" style="cursor:pointer;">📷 Foto<input type="file" accept="image/*" style="display:none;" onchange="loadCardPhoto(event)"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">Formaciones completadas</div>
+      <div style="padding:12px 16px;" id="card-checklist"></div>
+    </div>
+    <div id="card-preview-wrap" style="display:none;">
+      <div class="admin-section-title" style="margin-top:16px;">Vista previa</div>
+      <div id="card-preview" style="padding:16px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PIN MODAL -->
+<div class="pin-overlay" id="pin-modal">
+  <div class="pin-box">
+    <div style="font-size:36px;margin-bottom:8px;">🔐</div>
+    <h3 style="color:#1a2a3a;margin-bottom:4px;">Acceso Admin</h3>
+    <p style="color:#888;font-size:12px;margin-bottom:4px;">Introduce el PIN de 4 dígitos</p>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+    </div>
+    <div id="pin-error" style="color:#c00;font-size:12px;height:16px;margin-bottom:8px;"></div>
+    <div class="pin-numpad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key" onclick="pinKey('del')" style="font-size:14px;">⌫</button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key" onclick="closePinModal()" style="font-size:12px;color:#999;">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRINT CARD (hidden, shown only when printing) -->
+<div id="print-card" style="display:none;font-family:Arial,sans-serif;padding:20px;max-width:400px;border:2px solid #1a5ca8;border-radius:12px;margin:20px auto;"></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const CAT_ORDER=["Todos","General","Cocina","Sala","Almacén"];
+
+const DATA=[
+  {id:1,name:"Higiene Personal",cat:"General",emoji:"🧼",desc:"Normas básicas de higiene personal obligatorias para todo el personal del restaurante.",yield:"Diario",video:"",img:"",displayMode:"carousel",
+   utensilios:["Jabón de manos","Gel hidroalcohólico","Papel de un solo uso","Ropa de trabajo limpia"],
+   steps:["Lavarse las manos con jabón durante mínimo 20 segundos antes de iniciar la jornada.","Usar gel hidroalcohólico al entrar y salir de cada área de trabajo.","Mantener las uñas cortas y limpias en todo momento. No se permiten uñas postizas.","No llevar pulseras, anillos ni relojes durante el servicio.","En caso de heridas en las manos, cubrirlas con guante de látex y apósito impermeable.","Informar al responsable si se presentan síntomas de enfermedad (fiebre, tos, vómitos)."],
+   stepPhotos:{},quiz:[{q:"¿Cuántos segundos mínimo hay que lavarse las manos?",options:["10 segundos","20 segundos","30 segundos","1 minuto"],correct:1},{q:"¿Está permitido llevar anillos durante el servicio?",options:["Sí, si están limpios","Solo alianzas finas","No, nunca","Solo en sala"],correct:2}]},
+  {id:2,name:"Fichar al Entrar",cat:"General",emoji:"🕐",desc:"Procedimiento de entrada al restaurante: fichar, prepararse y estar listo para el servicio.",yield:"Cada turno",video:"",img:"",displayMode:"carousel",
+   utensilios:["Tarjeta de fichaje o app","Teléfono móvil (silencio)","Ropa de trabajo"],
+   steps:["Llegar 10 minutos antes del turno para cambiarse y prepararse.","Fichar la entrada en el sistema de control horario (app o reloj fichador).","Dejar el móvil personal en silencio y guardado en la taquilla o zona asignada.","Revisar el parte de incidencias del turno anterior.","Presentarse al responsable de turno para recibir indicaciones del servicio.","Comprobar que el uniforme está completo y limpio antes de salir a sala o cocina."],
+   stepPhotos:{},quiz:[]},
+  {id:3,name:"Ropa al Entrar",cat:"General",emoji:"👕",desc:"Protocolo para el uniforme y la ropa de trabajo. Cómo ponerse y guardar correctamente.",yield:"Cada turno",video:"",img:"",displayMode:"carousel",
+   utensilios:["Uniforme completo","Calzado de seguridad","Taquilla personal","Bolsa para ropa personal"],
+   steps:["Cambiarse la ropa de calle por el uniforme completo en la zona de vestuarios.","El uniforme incluye: camisa o polo del restaurante, pantalón, delantal y calzado cerrado antideslizante.","La ropa de calle se guarda doblada y limpia en la taquilla personal.","No se permite salir de la zona de trabajo con el uniforme puesto (excepto por necesidades del servicio).","Al final del turno, depositar la ropa de trabajo sucia en el cubo correspondiente para el lavado.","Revisar semanalmente el buen estado del uniforme y comunicar desgastes al responsable."],
+   stepPhotos:{},quiz:[]},
+  {id:4,name:"Vehículos",cat:"General",emoji:"🚗",desc:"Normas para el uso y el aparcamiento de vehículos del personal.",yield:"Diario",video:"",img:"",displayMode:"carousel",
+   utensilios:["Tarjeta de aparcamiento (si procede)","Llaves del vehículo"],
+   steps:["El personal debe aparcar en la zona asignada por el restaurante (preguntar al responsable la primera vez).","No bloquear nunca las zonas de carga y descarga ni el acceso de emergencias.","Si llegas en bicicleta o moto, utiliza el lugar habilitado en la parte posterior del edificio.","No dejar objetos de valor visibles en el vehículo.","En caso de incidente o accidente en el parking, informar inmediatamente al responsable."],
+   stepPhotos:{},quiz:[]},
+  {id:10,name:"Lavado de Manos",cat:"Cocina",emoji:"🙌",desc:"Protocolo obligatorio de lavado de manos para todo el personal de cocina.",yield:"Cada manipulación",video:"",img:"",displayMode:"carousel",
+   utensilios:["Jabón bactericida","Cepillo de uñas","Papel de un solo uso","Cubo de residuos (apertura de pie)"],
+   steps:["Abrir el grifo con el codo o pie si es posible para no contaminarlo.","Mojar las manos y las muñecas hasta los antebrazos.","Aplicar jabón bactericida y frotar durante mínimo 20 segundos: palmas, dorso, entre los dedos, pulgares y muñecas.","Usar el cepillo de uñas para limpiar bajo las uñas si es necesario.","Aclarar bien con agua corriente hasta eliminar todo el jabón.","Secar con papel de un solo uso. NO usar toallas de tela compartidas.","Tirar el papel al cubo de residuos sin tocarlo con las manos.","Lavarse las manos obligatoriamente: al llegar, tras tocar carne cruda, pescado crudo, huevos, basura, dinero, el teléfono o al usar el baño."],
+   stepPhotos:{},quiz:[]},
+  {id:20,name:"Cafés",cat:"Sala",emoji:"☕",desc:"Protocolo para preparar y servir cafés. Tipos, temperatura, presentación y orden de servicio.",yield:"Por servicio",video:"",img:"",displayMode:"carousel",
+   utensilios:["Máquina de espresso","Molinillo de café","Tazas y platos limpios","Cucharilla","Azúcar y edulcorante","Paño de limpieza seco"],
+   steps:["Comprobar que la máquina de espresso está a temperatura (luz verde encendida, 90-95°C).","Purgar el portafiltros unos 2 segundos antes de usarlo para eliminar residuos antiguos.","Moler el café en el momento, no guardar café ya molido para el día siguiente.","Dosificar correctamente: 7-8g por espresso simple, 14-16g por doble.","Servir el café en la taza precalentada. El espresso debe tener una crema densa de color miel.","Para los cortados y cafés con leche: vaporizar la leche hasta 60-65°C, textura sedosa sin burbujas grandes.","Presentar la taza sobre el plato con la cucharilla y el azúcar al lado derecho.","Limpiar inmediatamente el portafiltros y el vaporizador después de cada uso."],
+   stepPhotos:{},quiz:[]},
+  {id:21,name:"Recoger Mesa",cat:"Sala",emoji:"🍽️",desc:"Procedimiento correcto para recoger una mesa entre clientes o al final del servicio.",yield:"Por turno",video:"",img:"",displayMode:"carousel",
+   utensilios:["Bandeja de servicio","Paño de microfibra","Producto limpiamesas","Cubiertos limpios","Mantelería o salvamanteles"],
+   steps:["Esperar que todos los comensales hayan terminado el plato antes de recoger. No precipitarse.","Retirar los platos desde el lado derecho del cliente, con la mano derecha.","Apilar los platos en la bandeja de manera estable, nunca poner más de 6-8 platos apilados.","Retirar la cristalería por separado, nunca mezclar con los platos.","Recoger servilletas usadas y llevarlas a la zona de sucio.","Limpiar la mesa con paño de microfibra y producto limpiador (spray y paño limpio).","Repasar las sillas y los respaldos.","Poner cubiertos y complementos limpios para el próximo cliente."],
+   stepPhotos:{},quiz:[]},
+  {id:22,name:"Contar Palillos",cat:"Sala",emoji:"🥢",desc:"Protocolo para contar, revisar y preparar los palilleros para el servicio.",yield:"Diario",video:"",img:"",displayMode:"carousel",
+   utensilios:["Palillos","Palillero limpio","Paño de limpieza"],
+   steps:["Cada día antes del servicio, comprobar que los palilleros de todas las mesas están llenos.","Limpiar el palillero por fuera con un paño húmedo antes de rellenarlo.","Rellenar los palilleros con palillos limpios, nunca mezclar palillos usados con nuevos.","Comprobar que los palillos no están doblados ni rotos y retirar los defectuosos.","Al final del servicio, retirar todos los palilleros, limpiarlos y guardarlos en la zona asignada."],
+   stepPhotos:{},quiz:[]},
+  {id:23,name:"Cubertería",cat:"Sala",emoji:"🍴",desc:"Cómo limpiar, revisar y poner correctamente los cubiertos para el servicio.",yield:"Por servicio",video:"",img:"",displayMode:"carousel",
+   utensilios:["Cubertería de plata/acero","Paño de lustrar","Bandeja","Portacubiertos"],
+   steps:["Revisar cada pieza de cubertería a contraluz para detectar manchas o restos de comida.","Lustrar las piezas sucias o manchadas con un paño de algodón seco, nunca con productos abrasivos.","Los cubiertos se ponen en orden: de fuera hacia dentro (el primero que se usará es el más externo).","Tenedor a la izquierda del plato, cuchillo y cuchara a la derecha. El filo del cuchillo hacia el plato.","El cubierto de postre se pone horizontal sobre el plato o se lleva cuando se sirven los postres.","Nunca tocar las piezas por las partes que van a la boca, siempre coger por los mangos.","Guardar la cubertería limpia en el portacubiertos con las puntas hacia abajo para protegerlas."],
+   stepPhotos:{},quiz:[]},
+  {id:30,name:"Ropa de Almacén",cat:"Almacén",emoji:"👔",desc:"Organización y control de la ropa de trabajo y uniformes en el almacén.",yield:"Semanal",video:"",img:"",displayMode:"carousel",
+   utensilios:["Armario de ropa","Etiquetas de nombre","Bolsa de ropa sucia","Registro de ropa"],
+   steps:["Inventariar mensualmente todas las prendas de uniforme disponibles en el almacén.","Etiquetar cada prenda con el nombre del trabajador asignado para evitar confusiones.","Separar claramente la ropa limpia (almacenada en el armario) de la ropa sucia (bolsa específica).","Entregar la ropa sucia a la lavandería los días acordados y registrar la salida.","Al recibir la ropa limpia, revisar que esté completa y en buen estado y registrarlo.","Comunicar inmediatamente al responsable cualquier prenda dañada o extraviada."],
+   stepPhotos:{},quiz:[]},
+  {id:31,name:"Congeladores",cat:"Almacén",emoji:"🧊",desc:"Protocolo de control y mantenimiento de los congeladores.",yield:"Diario",video:"",img:"",displayMode:"carousel",
+   utensilios:["Termómetro de sonda","Hoja de registro de temperaturas","Etiquetas impermeables","Marcador permanente"],
+   steps:["Controlar y anotar la temperatura de los congeladores 2 veces al día (mañana y tarde). Temperatura correcta: -18°C o inferior.","Si la temperatura supera -15°C, avisar inmediatamente al responsable.","Todos los productos deben estar etiquetados con: nombre del producto, fecha de entrada y fecha de caducidad.","Organizar el congelador: productos crudos en la parte inferior, elaborados en la parte superior. Nunca cruzar contaminación.","No sobrecargar el congelador: debe circular el aire entre los productos.","Limpiar el congelador cuando haya escarcha o como mínimo una vez al mes: desconectar, descongelar, limpiar con producto autorizado y secar bien.","Revisar las juntas de la puerta regularmente y comunicar cualquier deterioro."],
+   stepPhotos:{},quiz:[]},
+  {id:32,name:"Cartones",cat:"Almacén",emoji:"📦",desc:"Gestión y eliminación correcta de los cartones de embalaje en el almacén.",yield:"Por pedido",video:"",img:"",displayMode:"carousel",
+   utensilios:["Cúter o tijeras","Prensa de cartón (si disponible)","Contenedor de reciclaje","Guantes de trabajo"],
+   steps:["Al recibir un pedido, desembalar inmediatamente los productos y sacarlos de los cartones.","Los cartones NO deben entrar nunca en las zonas de cocina ni de frío para evitar contaminación con insectos.","Doblar los cartones para reducir el volumen: abrir las solapas y apilarlos en plano.","Depositar los cartones doblados en el contenedor de reciclaje específico (azul).","Si hay prensa de cartón, usarla para compactar y reducir volumen.","Nunca acumular cartones en las zonas de paso o emergencia: es riesgo de incendio e infracción."],
+   stepPhotos:{},quiz:[]},
+  {id:33,name:"Etiquetas",cat:"Almacén",emoji:"🏷️",desc:"Sistema de etiquetado de productos en el almacén y en las cámaras frigoríficas.",yield:"Continuo",video:"",img:"",displayMode:"carousel",
+   utensilios:["Etiquetas adhesivas impermeables","Marcador permanente o impresora de etiquetas","Registro de entradas","Cinta adhesiva impermeable (para congelados)"],
+   steps:["Todo producto que entre en el almacén o en las cámaras debe ser etiquetado inmediatamente.","La etiqueta debe incluir: nombre del producto, fecha de entrada, fecha de caducidad y alérgenos si procede.","Usar bolígrafo/marcador permanente o impresora de etiquetas. Nunca etiquetas a mano con tinta que pueda borrarse.","Para los congelados, usar etiquetas impermeables y fijarlas bien para evitar que caigan con la humedad.","Sistema FIFO: el primero que entra, el primero que sale. Colocar los productos más antiguos delante.","Revisar diariamente las caducidades y retirar o notificar los productos próximos a caducar.","Registrar todas las entradas y salidas en la hoja de control de almacén."],
+   stepPhotos:{},quiz:[]}
+];
+
+let current=null,speaking=false,spd=1,activeCat="Todos";
+let _pinCb=null,_pinVal="";
+let _quizData=[],_quizIdx=0,_quizScore=0,_quizAnswered=false;
+let _displayMode="carousel";
+let _cardPhotoData="";
+
+// ===== PIN =====
+function getPin(){return localStorage.getItem("formacio_pin")||"1234";}
+function requirePin(cb){
+  const pin=getPin();
+  if(!pin){cb();return;}
+  _pinCb=cb;_pinVal="";
+  updatePinDots();
+  document.getElementById("pin-error").textContent="";
+  document.getElementById("pin-modal").classList.add("show");
+}
+function pinKey(k){
+  if(k==="del"){_pinVal=_pinVal.slice(0,-1);updatePinDots();return;}
+  if(_pinVal.length>=4)return;
+  _pinVal+=k;
+  updatePinDots();
+  if(_pinVal.length===4){
+    if(_pinVal===getPin()){
+      document.getElementById("pin-modal").classList.remove("show");
+      if(_pinCb){const cb=_pinCb;_pinCb=null;setTimeout(cb,100);}
+    }else{
+      document.getElementById("pin-error").textContent="PIN incorrecto";
+      _pinVal="";
+      setTimeout(()=>{updatePinDots();document.getElementById("pin-error").textContent="";},600);
+    }
+  }
+}
+function updatePinDots(){
+  for(let i=0;i<4;i++){const d=document.getElementById("pd"+i);if(d){d.className="pin-dot"+(i<_pinVal.length?" filled":"");}}
+}
+function closePinModal(){document.getElementById("pin-modal").classList.remove("show");_pinCb=null;_pinVal="";}
+function savePin(){
+  const v=document.getElementById("new-pin").value.trim();
+  if(!/^\d{4}$/.test(v)){showToast("⚠️ PIN debe ser 4 dígitos");return;}
+  localStorage.setItem("formacio_pin",v);
+  document.getElementById("new-pin").value="";
+  updatePinDisplay();
+  showToast("✅ PIN guardado: "+v);
+}
+function updatePinDisplay(){
+  const el=document.getElementById("pin-display");
+  if(el)el.textContent=getPin().replace(/./g,"●");
+}
+
+// ===== DISPLAY MODE TOGGLE =====
+function toggleDisplay(val){
+  _displayMode=val;
+  document.querySelectorAll(".dtog-btn").forEach(b=>{b.classList.toggle("active",b.dataset.val===val);});
+  const vr=document.getElementById("video-url-row");
+  if(vr)vr.style.display=(val==="video"||val==="both")?"":"none";
+}
+
+// ===== MISSING TAGS =====
+function _fmtDate(ts){
+  if(!ts)return"";
+  const d=new Date(ts);
+  const day=d.getDate().toString().padStart(2,'0'),mon=(d.getMonth()+1).toString().padStart(2,'0'),yr=d.getFullYear();
+  const h=d.getHours().toString().padStart(2,'0'),m=d.getMinutes().toString().padStart(2,'0');
+  return day+'/'+mon+'/'+yr+' '+h+':'+m;
+}
+function getMissingTags(d){
+  const t=[];
+  if(!d.img)t.push("📷 Sin foto");
+  if(!(d.utensilios||[]).length)t.push("🔧 Sin materiales");
+  if(!(d.steps||[]).length)t.push("📋 Sin pasos");
+  else{const p=Object.keys(d.stepPhotos||{}).length;if(p<(d.steps||[]).length)t.push("🖼️ "+p+"/"+(d.steps.length)+" fotos");}
+  if(!(d.quiz||[]).length)t.push("🧠 Sin quiz");
+  return t;
+}
+
+// ===== NAVIGATION =====
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="list")render();
+  if(id==="home")updateStats();
+  if(id!=="detail")stopSpeech();
+  if(id==="admin"){renderAdminList();const il=document.getElementById("ing-list");const isEdit=document.getElementById("edit-id").value;if(!il.children.length&&!isEdit){addIng();addIng();addStep("","",0);addStep("","",1);addStep("","",2);}}
+  if(id==="card")renderCardChecklist();
+}
+
+function updateStats(){
+  const all=getAllRecipes();
+  const sc=document.getElementById("sc"),scat=document.getElementById("scat");
+  if(sc)sc.textContent=all.length;
+  if(scat)scat.textContent=[...new Set(all.map(d=>d.cat))].length;
+  const strip=document.getElementById("home-strip");
+  if(strip&&!strip._loaded){strip._loaded=true;const wi=all.filter(d=>d.img);if(wi.length){const row=[...wi,...wi];strip.innerHTML=row.map(d=>`<img src="${d.img}" alt="${d.name}">`).join("");}}
+}
+
+function render(){
+  try{
+    const q=(document.getElementById("searchInput")||{}).value||"";const ql=q.toLowerCase();
+    const allData=getAllRecipes();
+    const cats=CAT_ORDER.filter(c=>c==="Todos"||allData.some(d=>d.cat===c));
+    document.getElementById("cat-bar").innerHTML=cats.map(c=>`<button class="cat-btn${c===activeCat?" active":""}" onclick="setCat('${c}')">${c}</button>`).join("");
+    let filtered=allData.filter(d=>{
+      const mc=activeCat==="Todos"||d.cat===activeCat;
+      const mq=d.name.toLowerCase().includes(ql)||(d.desc||"").toLowerCase().includes(ql)||(d.cat||"").toLowerCase().includes(ql)||(d.utensilios||[]).some(i=>i.toLowerCase().includes(ql));
+      return mc&&mq;
+    });
+    const grid=document.getElementById("grid");
+    if(!filtered.length){grid.innerHTML='<div class="no-results">Sin resultados</div>';return;}
+    try{filtered.sort((a,b)=>a.name.localeCompare(b.name,"es"));}catch(e){}
+    grid.innerHTML=filtered.map(d=>{
+      try{
+        const miss=getMissingTags(d);
+        const missHtml=miss.length?`<div class="card-missing">${miss.map(m=>`<span class="miss-tag">${m}</span>`).join("")}</div>`:"";
+        return `<div class="recipe-card" onclick="openItem(${d.id})">
+          <div class="card-top">${d.img?`<img src="${d.img}" alt="${d.name}" loading="lazy">`:`<div class="no-img">${d.emoji||"📋"}</div>`}<span class="card-cat-tag">${d.cat}</span>${(d.video&&(d.displayMode==="video"||d.displayMode==="both"))?'<span class="video-badge">▶ Vídeo</span>':""}</div>
+          <div class="card-body"><div class="card-title">${d.name}</div><div class="card-meta"><span>📋 ${(d.steps||[]).length} pasos</span><span>🔧 ${(d.utensilios||[]).length} mat.</span>${(d.quiz||[]).length?`<span>🧠 ${d.quiz.length}Q</span>`:""}</div><div class="card-desc">${d.desc||""}</div></div>
+          ${missHtml}
+        </div>`;
+      }catch(e){return "";}
+    }).join("");
+  }catch(e){console.error(e);}
+}
+function setCat(c){activeCat=c;render();}
+
+function getYTId(url){
+  if(!url)return null;
+  if(url.includes("drive.google.com"))return url;
+  const m=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^&\n?#]+)/);
+  return m?"https://www.youtube.com/embed/"+m[1]:null;
+}
+
+function openItem(id){
+  stopSpeech();
+  const allData=getAllRecipes();
+  current=allData.find(d=>d.id===id);
+  if(!current)return;
+  const dm=current.displayMode||"carousel";
+  const vid=getYTId(current.video);
+  const utensilios=current.utensilios||[];
+  const showCar=dm==="carousel"||dm==="both";
+  const showVid=(dm==="video"||dm==="both")&&vid;
+  let sn=1;
+  document.getElementById("detail-content").innerHTML=`
+    ${current.img?`<div class="detail-img-wrap"><img src="${current.img}" alt="${current.name}"><img src="${current.img}" alt="${current.name}"><img src="${current.img}" alt="${current.name}"></div>`:""}
+    <div class="detail-hero">
+      <div class="d-cat">${current.cat}</div>
+      <h1 class="d-title">${current.name}</h1>
+      ${current.desc?`<div class="d-desc">${current.desc}</div>`:""}
+      <div class="d-badges">
+        <span class="dbadge">📋 ${(current.steps||[]).length} pasos</span>
+        <span class="dbadge">🔧 ${utensilios.length} materiales</span>
+        ${current.yield?`<span class="dbadge">⏱️ ${current.yield}</span>`:""}
+        ${(current.quiz||[]).length?`<span class="dbadge">🧠 ${current.quiz.length} preguntas</span>`:""}
+      </div>
+    </div>
+    <div class="detail-body">
+      ${utensilios.length?`<div class="section-block"><div class="sec-label"><span class="sec-num">${sn++}</span> Materiales necesarios</div><div class="ing-grid">${utensilios.map(u=>`<div class="ing-item"><div class="ing-name">${u}</div></div>`).join("")}</div></div>`:""}
+      <div class="section-block"><div class="sec-label"><span class="sec-num">${sn++}</span> Pasos de la formación</div>${(current.steps||[]).map((s,i)=>`<div class="step-item"><div class="step-num">${i+1}</div><div class="step-text">${s}</div></div>`).join("")}</div>
+      ${showCar?`<div class="section-block"><div class="sec-label"><span class="sec-num">${sn++}</span> Carrusel de pasos</div><div class="carousel" id="car"><div class="car-photo" id="car-photo"><div class="car-no-photo" id="car-nophoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg><span>Sin foto para este paso</span></div><img id="car-img" src="" alt="" style="display:none;width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;background:#1a1a1a;"><div class="car-badge" id="car-badge">Paso 1 de 1</div><div class="car-dots" id="car-dots"></div><button class="car-arrow left" onclick="carPrev()">‹</button><button class="car-arrow right" onclick="carNext()">›</button></div><div class="car-body"><div class="car-step-label" id="car-label">PASO 1</div><div class="car-step-text" id="car-text"></div></div></div></div>`:""}
+      ${showVid?`<div class="section-block"><div class="sec-label"><span class="sec-num">${sn++}</span> Vídeo demostrativo</div><div style="margin-top:10px;border-radius:8px;overflow:hidden;"><iframe width="100%" height="220" src="${vid}" frameborder="0" allowfullscreen style="display:block;"></iframe></div></div>`:""}
+    </div>`;
+  document.getElementById("pstatus").textContent="Pulsa play para escuchar";
+  document.getElementById("pfill").style.width="0%";
+  document.getElementById("pbtn").textContent="▶";
+  const qbar=document.getElementById("quiz-btn-bar");
+  if(qbar)qbar.style.display=(current.quiz&&current.quiz.length)?"flex":"none";
+  show("detail");
+  if(showCar)initCarousel();
+}
+
+let carIdx=0;
+function initCarousel(){
+  carIdx=0;renderCar();
+  const ph=document.getElementById("car-photo");
+  if(ph&&!ph._swipe){ph._swipe=true;let tx=0;
+    ph.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;},{passive:true});
+    ph.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){dx<0?carNext():carPrev();}},{passive:true});}
+}
+function renderCar(){
+  if(!current||!current.steps||!current.steps.length)return;
+  const steps=current.steps,total=steps.length,sp=current.stepPhotos||{};
+  const cb=document.getElementById("car-badge"),cl=document.getElementById("car-label"),ct=document.getElementById("car-text");
+  const ci=document.getElementById("car-img"),cn=document.getElementById("car-nophoto"),cd=document.getElementById("car-dots");
+  if(!cb)return;
+  cb.textContent=`Paso ${carIdx+1} de ${total}`;
+  cl.textContent=`PASO ${carIdx+1}`;
+  ct.textContent=steps[carIdx];
+  const photo=sp[carIdx];
+  if(photo){ci.src=photo;ci.style.display="block";cn.style.display="none";}
+  else{ci.style.display="none";cn.style.display="flex";}
+  cd.innerHTML=steps.map((_,i)=>`<div class="car-dot${i===carIdx?" active":""}"></div>`).join("");
+}
+function carNext(){if(!current||!current.steps.length)return;carIdx=(carIdx+1)%current.steps.length;renderCar();}
+function carPrev(){if(!current||!current.steps.length)return;carIdx=(carIdx-1+current.steps.length)%current.steps.length;renderCar();}
+
+function copyRecipe(){
+  if(!current)return;
+  let t=current.name+"\n\n";
+  if(current.yield)t+="Duración: "+current.yield+"\n\n";
+  if((current.utensilios||[]).length){t+="MATERIALES:\n";current.utensilios.forEach(u=>{t+="• "+u+"\n";});}
+  t+="\nPASOS:\n";(current.steps||[]).forEach((s,i)=>t+=(i+1)+". "+s+"\n");
+  navigator.clipboard.writeText(t).then(()=>showToast("✅ Formación copiada")).catch(()=>showToast("No se pudo copiar"));
+}
+
+// ===== QUIZ =====
+function openQuiz(){
+  if(!current||!(current.quiz||[]).length){showToast("Esta formación no tiene quiz");return;}
+  _quizData=[...current.quiz];_quizIdx=0;_quizScore=0;_quizAnswered=false;
+  document.getElementById("quiz-title-bar").textContent=current.name+" — Quiz";
+  show("quiz");
+  renderQuizQ();
+}
+function renderQuizQ(){
+  const body=document.getElementById("quiz-body");
+  if(_quizIdx>=_quizData.length){
+    const pct=Math.round((_quizScore/_quizData.length)*100);
+    const ok=pct>=70;
+    body.innerHTML=`<div class="quiz-result-box">
+      <div style="font-size:60px;margin-bottom:16px;">${ok?"🎉":"😅"}</div>
+      <h2 style="font-size:24px;margin-bottom:8px;color:${ok?"#2e7d32":"#c00"};">${_quizScore}/${_quizData.length}</h2>
+      <p style="color:#666;font-size:16px;margin-bottom:24px;">${pct}% — ${ok?"¡Aprobado!":"Necesita repasar"}</p>
+      <button class="btn-main" onclick="openQuiz()" style="max-width:200px;margin:0 auto 10px;">🔄 Repetir</button>
+      <button class="btn-secondary" onclick="show('detail')" style="max-width:200px;margin:0 auto;">← Volver</button>
+    </div>`;
+    document.getElementById("quiz-progress").textContent="";
+    return;
+  }
+  const q=_quizData[_quizIdx];
+  document.getElementById("quiz-progress").textContent=(_quizIdx+1)+"/"+_quizData.length;
+  body.innerHTML=`<div class="quiz-q-card">
+    <div class="quiz-q-text">${_quizIdx+1}. ${q.q}</div>
+    ${q.options.map((o,i)=>`<button class="quiz-option" id="qopt${i}" onclick="selectQuizOpt(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join("")}
+    <div id="quiz-feedback" style="margin-top:12px;font-size:13px;font-weight:bold;min-height:20px;"></div>
+    <button id="quiz-next-btn" onclick="nextQuizQ()" style="display:none;margin-top:16px;width:100%;background:#1a5ca8;color:#fff;border:none;padding:12px;border-radius:6px;font-size:15px;font-weight:bold;cursor:pointer;">Siguiente →</button>
+  </div>`;
+  _quizAnswered=false;
+}
+function selectQuizOpt(i){
+  if(_quizAnswered)return;
+  _quizAnswered=true;
+  const q=_quizData[_quizIdx];
+  const correct=q.correct;
+  for(let j=0;j<q.options.length;j++){
+    const b=document.getElementById("qopt"+j);
+    if(b){b.disabled=true;if(j===correct)b.classList.add("correct");else if(j===i&&i!==correct)b.classList.add("wrong");}
+  }
+  const fb=document.getElementById("quiz-feedback");
+  if(i===correct){_quizScore++;if(fb)fb.innerHTML='<span style="color:#2e7d32;">✅ ¡Correcto!</span>';}
+  else{if(fb)fb.innerHTML=`<span style="color:#c00;">❌ Incorrecto. La respuesta era: ${String.fromCharCode(65+correct)}) ${q.options[correct]}</span>`;}
+  const nb=document.getElementById("quiz-next-btn");if(nb)nb.style.display="block";
+}
+function nextQuizQ(){_quizIdx++;renderQuizQ();}
+
+// ===== AUDIO =====
+const _ORDS=["Primero","Segundo","Tercero","Cuarto","Quinto","Sexto","Séptimo","Octavo","Noveno","Décimo","Undécimo","Duodécimo","Decimotercero","Decimocuarto","Decimoquinto"];
+function _ordinal(i){return _ORDS[i]||("Paso "+(i+1));}
+function _bestVoice(){
+  const vs=window.speechSynthesis.getVoices();
+  const pref=["Monica","Mónica","Paulina","Jorge","Juan","Montserrat"];
+  for(const n of pref){const v=vs.find(x=>x.name.includes(n));if(v)return v;}
+  return vs.find(v=>v.lang.startsWith("es"))||null;
+}
+function togglePlay(){speaking?stopSpeech():startSpeech();}
+let _sTmrs=[];
+function stopSpeech(){
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
+  speaking=false;_sTmrs.forEach(clearTimeout);_sTmrs=[];
+  const b=document.getElementById("pbtn");if(b)b.textContent="▶";
+}
+function startSpeech(){
+  if(!current||!window.speechSynthesis)return;stopSpeech();
+  const steps=current.steps||[];if(!steps.length)return;
+  const voice=_bestVoice();
+  const phrases=[current.name+"."].concat(steps.map((s,i)=>_ordinal(i)+". "+s));
+  const totalCh=phrases.reduce((a,p)=>a+p.length,0);
+  let spokenCh=0,pIdx=0;
+  const wd=setInterval(()=>{if(!speaking){clearInterval(wd);return;}if(window.speechSynthesis.paused)window.speechSynthesis.resume();},400);
+  _sTmrs.push(wd);
+  function speakNext(){
+    if(!speaking||pIdx>=phrases.length){clearInterval(wd);if(speaking){speaking=false;document.getElementById("pbtn").textContent="▶";document.getElementById("pstatus").textContent="✓ Completada";document.getElementById("pfill").style.width="100%";}return;}
+    const text=phrases[pIdx];
+    if(pIdx>0){carIdx=pIdx-1;renderCar();}
+    document.getElementById("pstatus").textContent="🔊 "+(pIdx>0?_ordinal(pIdx-1)+": ":"")+text.substring(0,40)+"...";
+    const u=new SpeechSynthesisUtterance(text);
+    if(voice)u.voice=voice;u.lang="es-ES";u.rate=spd;
+    u.onend=()=>{if(!speaking)return;spokenCh+=text.length;document.getElementById("pfill").style.width=Math.min((spokenCh/totalCh)*100,100)+"%";pIdx++;_sTmrs.push(setTimeout(speakNext,80));};
+    u.onerror=()=>{if(!speaking)return;pIdx++;_sTmrs.push(setTimeout(speakNext,80));};
+    window.speechSynthesis.speak(u);
+  }
+  const doSpeak=()=>{speaking=true;document.getElementById("pbtn").textContent="⏸";pIdx=0;spokenCh=0;speakNext();};
+  if(window.speechSynthesis.getVoices().length>0)doSpeak();
+  else window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;doSpeak();};
+}
+function toggleSpeed(){
+  const sp=[1,1.5,.75],lb=["1×","1.5×","0.75×"];
+  const i=sp.indexOf(spd);spd=sp[(i+1)%3];
+  document.getElementById("sbtn").textContent=lb[(i+1)%3];
+  if(speaking){stopSpeech();startSpeech();}
+}
+function toggleDark(){document.body.classList.toggle("dark");localStorage.setItem("formacio_dark",document.body.classList.contains("dark")?"1":"0");}
+
+// ===== SYNC =====
+function setSyncStatus(m,c){const el=document.getElementById("sync-status");if(el){el.textContent=m;el.style.color=c||"#aaa";}}
+function getCustomRecipes(){try{return JSON.parse(localStorage.getItem("calau_formacio")||"[]");}catch(e){return[];}}
+function saveCustomRecipes(arr){
+  localStorage.setItem("calau_formacio",JSON.stringify(arr));
+  setSyncStatus("⏳ Guardando...","#aaa");
+  Promise.all(arr.map(r=>fetch(SUPA_URL+"/rest/v1/trainings",{method:"POST",headers:{..._sh,"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({id:r.id,name:r.name,data:JSON.stringify(r)})}))).then(res=>{
+    if(res.every(r=>r.ok)){setSyncStatus("✓ Sincronizado","#4caf50");setTimeout(()=>setSyncStatus(""),3000);}
+    else setSyncStatus("⚠️ Error al guardar","#c00");
+  }).catch(()=>setSyncStatus("⚠️ Error al guardar","#c00"));
+}
+function deleteFromSupabase(id){
+  fetch(SUPA_URL+"/rest/v1/trainings",{method:"POST",headers:{..._sh,"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({id,name:"__deleted__",data:JSON.stringify({id,__deleted:true})})}).catch(()=>{});
+}
+let _syncing=false;
+async function syncFromSupabase(){
+  if(_syncing)return;_syncing=true;setSyncStatus("⏳ Sincronizando...","#aaa");
+  try{
+    const res=await fetch(SUPA_URL+"/rest/v1/trainings?select=*",{headers:_sh});
+    if(!res.ok){setSyncStatus("⚠️ Sin conexión","#e07b00");_syncing=false;return;}
+    const data=await res.json();
+    const from=data.map(r=>{try{return JSON.parse(r.data);}catch(e){return null;}}).filter(Boolean).filter(r=>!r.__deleted);
+    localStorage.setItem("calau_formacio",JSON.stringify(from));
+    render();updateStats();setSyncStatus("✓ Sincronizado","#4caf50");setTimeout(()=>setSyncStatus(""),2000);
+  }catch(e){setSyncStatus("⚠️ Sin conexión","#e07b00");}
+  _syncing=false;
+}
+function getAllRecipes(){
+  const c=getCustomRecipes(),ids=new Set(c.map(r=>r.id));
+  return [...DATA.filter(d=>!ids.has(d.id)),...c];
+}
+
+// ===== ADMIN FORM =====
+let adminStepPhotos={},mainPhotoData="";
+
+function compressImg(dataUrl,cb){
+  const img=new Image();
+  img.onload=()=>{const mx=800;let w=img.width,h=img.height;if(Math.max(w,h)>mx){const r=mx/Math.max(w,h);w=Math.round(w*r);h=Math.round(h*r);}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);cb(c.toDataURL("image/jpeg",.72));};
+  img.src=dataUrl;
+}
+function loadMainPhoto(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();r.onload=ev=>compressImg(ev.target.result,c=>{mainPhotoData=c;const prev=document.getElementById("f-img-preview"),ph=document.getElementById("f-img-placeholder");prev.src=c;prev.style.display="block";ph.style.display="none";});r.readAsDataURL(file);
+}
+function addIng(val=""){
+  const list=document.getElementById("ing-list"),div=document.createElement("div");div.className="ing-row";
+  const inp=document.createElement("input");inp.type="text";inp.placeholder="Material necesario (ej: Jabón de manos)";inp.value=val;
+  const btn=document.createElement("button");btn.className="del-btn";btn.textContent="×";btn.onclick=function(){this.parentElement.remove();};
+  div.appendChild(inp);div.appendChild(btn);list.appendChild(div);
+}
+function addStep(val="",photoData="",idx=null){
+  const list=document.getElementById("step-list"),si=idx!==null?idx:list.children.length;
+  const div=document.createElement("div");div.className="step-photo-row";div.dataset.idx=si;
+  const outer=document.createElement("div");outer.style.cssText="display:flex;flex-direction:column;gap:4px;flex:1;";
+  const inner=document.createElement("div");inner.style.cssText="display:flex;gap:8px;align-items:flex-start;";
+  const pw=document.createElement("div");pw.style.cssText="display:flex;flex-direction:column;gap:3px;align-items:center;flex-shrink:0;";
+  if(photoData){const img=document.createElement("img");img.className="step-thumb";img.src=photoData;img.style.cssText="width:48px;height:48px;object-fit:cover;border-radius:4px;";pw.appendChild(img);}
+  else{const ph=document.createElement("div");ph.className="step-add-photo";ph.textContent="📷";pw.appendChild(ph);}
+  const mkBtn=(label,cap)=>{const lb=document.createElement("label");lb.style.cssText="font-size:9px;background:#f0f0f0;border:1px solid #ddd;border-radius:3px;padding:2px 4px;cursor:pointer;white-space:nowrap;";lb.textContent=label;const fi=document.createElement("input");fi.type="file";fi.accept="image/*";if(cap)fi.setAttribute("capture","environment");fi.style.display="none";fi.onchange=e=>loadStepPhoto(e,si,div);lb.appendChild(fi);return lb;};
+  pw.appendChild(mkBtn("📷 Cám.",true));pw.appendChild(mkBtn("🖼️ Gal.",false));inner.appendChild(pw);
+  const ta=document.createElement("textarea");ta.placeholder="Descripción del paso "+(si+1);ta.value=val;inner.appendChild(ta);
+  const db=document.createElement("button");db.className="del-btn";db.textContent="×";db.onclick=()=>{div.remove();renumberSteps();};inner.appendChild(db);
+  outer.appendChild(inner);div.appendChild(outer);
+  if(photoData)adminStepPhotos[si]=photoData;
+  list.appendChild(div);
+}
+function loadStepPhoto(e,idx,rowEl){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();r.onload=ev=>compressImg(ev.target.result,c=>{adminStepPhotos[idx]=c;const old=rowEl.querySelector(".step-thumb,.step-add-photo");if(old){const img=document.createElement("img");img.className="step-thumb";img.src=c;img.style.cssText="width:48px;height:48px;object-fit:cover;border-radius:4px;";old.replaceWith(img);}});r.readAsDataURL(file);
+}
+function renumberSteps(){[...document.getElementById("step-list").children].forEach((row,i)=>{row.dataset.idx=i;const ta=row.querySelector("textarea");if(ta)ta.placeholder=`Descripción del paso ${i+1}`;});}
+
+function addQuizQ(data=null){
+  const list=document.getElementById("quiz-list"),div=document.createElement("div");div.className="quiz-q-row";
+  const qinp=document.createElement("input");qinp.type="text";qinp.placeholder="Pregunta del quiz";qinp.style.cssText="border:1px solid #ddd;border-radius:4px;padding:7px 10px;font-size:13px;outline:none;width:100%;";qinp.value=data?data.q:"";
+  const opts=document.createElement("div");opts.style.marginTop="8px";
+  const optsArr=data?data.options:["","","",""];
+  const correctIdx=data?data.correct:0;
+  optsArr.forEach((o,i)=>{
+    const row=document.createElement("div");row.className="quiz-opt-row";
+    const radio=document.createElement("input");radio.type="radio";radio.name="quiz-correct-"+list.children.length+"_"+Date.now();radio.value=i;radio.checked=(i===correctIdx);
+    const inp=document.createElement("input");inp.type="text";inp.placeholder="Opción "+(i+1)+(i===0?" (correcta si marcas aquí)":"");inp.style.cssText="border:1px solid #ddd;border-radius:4px;padding:6px 8px;font-size:12px;outline:none;flex:1;";inp.value=o;
+    const lbl=document.createElement("span");lbl.style.cssText="font-size:11px;color:#888;width:20px;flex-shrink:0;";lbl.textContent=String.fromCharCode(65+i)+")";
+    row.appendChild(radio);row.appendChild(lbl);row.appendChild(inp);opts.appendChild(row);
+  });
+  const del=document.createElement("button");del.className="del-btn";del.textContent="×";del.style.cssText="align-self:flex-end;";del.onclick=()=>div.remove();
+  div.appendChild(qinp);div.appendChild(opts);div.appendChild(del);list.appendChild(div);
+}
+function collectQuiz(){
+  return [...document.getElementById("quiz-list").children].map(div=>{
+    const q=div.querySelector("input[type=text]").value.trim();
+    if(!q)return null;
+    const rows=[...div.querySelectorAll(".quiz-opt-row")];
+    const options=rows.map(r=>r.querySelector("input[type=text]").value.trim());
+    const correctR=rows.findIndex(r=>r.querySelector("input[type=radio]").checked);
+    const correct=correctR>=0?correctR:0;
+    if(options.filter(Boolean).length<2)return null;
+    return{q,options,correct};
+  }).filter(Boolean);
+}
+
+function saveRecipe(){
+  const name=(document.getElementById("f-name").value||"").trim();
+  const cat=document.getElementById("f-cat").value;
+  const fe=document.getElementById("f-emoji"),fd=document.getElementById("f-desc"),fy=document.getElementById("f-yield"),fv=document.getElementById("f-video");
+  const emoji=(fe?fe.value.trim():"")||"📋";
+  const desc=fd?fd.value.trim():"";
+  const yieldVal=fy?fy.value.trim():"";
+  const video=fv?fv.value.trim():"";
+  const editId=document.getElementById("edit-id").value;
+  if(!name){showToast("⚠️ El nombre es obligatorio");return;}
+  const ingRows=[...document.getElementById("ing-list").children];
+  const utensilios=ingRows.map(r=>{const i=r.querySelector("input");return i?i.value.trim():"";}).filter(Boolean);
+  const stepRows=[...document.getElementById("step-list").children];
+  const steps=stepRows.map(r=>{const t=r.querySelector("textarea");return t?t.value.trim():"";}).filter(Boolean);
+  if(!steps.length){showToast("⚠️ Añade al menos un paso");return;}
+  const stepPhotos={};stepRows.forEach((row,i)=>{const oi=parseInt(row.dataset.idx,10);if(adminStepPhotos[oi])stepPhotos[i]=adminStepPhotos[oi];});
+  const quiz=collectQuiz();
+  const customs=getCustomRecipes();
+  if(editId){
+    const pId=parseInt(editId,10),i=customs.findIndex(r=>r.id===pId);
+    if(i>=0)customs[i]={...customs[i],name,cat,emoji,desc,yield:yieldVal,video,displayMode:_displayMode,utensilios,steps,stepPhotos,img:mainPhotoData||customs[i].img,quiz,updatedAt:Date.now()};
+    else{const orig=DATA.find(d=>d.id===pId)||{};customs.push({...orig,id:pId,name,cat,emoji,desc,yield:yieldVal,video,displayMode:_displayMode,utensilios,steps,stepPhotos,img:mainPhotoData||orig.img||"",quiz,createdAt:Date.now(),updatedAt:Date.now()});}
+    saveCustomRecipes(customs);clearEditMode();showToast("✅ Formación actualizada");
+  }else{
+    const newId=Date.now(),recipe={id:newId,name,cat,emoji,desc,yield:yieldVal,video,displayMode:_displayMode,utensilios,steps,stepPhotos,img:mainPhotoData,quiz,createdAt:newId,updatedAt:newId};
+    customs.push(recipe);saveCustomRecipes(customs);showToast("✅ Formación guardada");
+    resetAdminForm();renderAdminList();updateStats();openItem(newId);return;
+  }
+  resetAdminForm();renderAdminList();updateStats();
+}
+function resetAdminForm(){
+  clearEditMode();
+  document.getElementById("edit-id").value="";
+  document.getElementById("f-name").value="";
+  document.getElementById("f-cat").value="General";
+  ["f-emoji","f-desc","f-yield","f-video"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  document.getElementById("f-img-preview").style.display="none";
+  document.getElementById("f-img-placeholder").style.display="flex";
+  document.getElementById("ing-list").innerHTML="";
+  document.getElementById("step-list").innerHTML="";
+  document.getElementById("quiz-list").innerHTML="";
+  document.getElementById("admin-form-title").textContent="➕ Nueva formación";
+  mainPhotoData="";adminStepPhotos={};_displayMode="carousel";
+  toggleDisplay("carousel");
+  addIng();addIng();addStep("","",0);addStep("","",1);addStep("","",2);
+}
+function renderAdminList(){
+  const c=getCustomRecipes(),el=document.getElementById("admin-recipe-list");
+  if(!c.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px;">Sin formaciones añadidas todavía</div>';return;}
+  el.innerHTML=c.map(r=>`<div class="admin-recipe-item"><div class="admin-recipe-emoji">${r.emoji||"📋"}</div><div class="admin-recipe-info"><div class="admin-recipe-name">${r.name}</div><div class="admin-recipe-cat">${r.cat} · ${(r.steps||[]).length} pasos</div><div style="font-size:10px;color:#aaa;margin-top:2px;">${r.updatedAt?'✏️ '+_fmtDate(r.updatedAt):r.createdAt?'➕ '+_fmtDate(r.createdAt):''}</div></div><div class="admin-recipe-actions"><button class="btn-edit" onclick="editCustomRecipe(${r.id})">✏️ Editar</button><button class="btn-danger" onclick="confirmDeleteRecipe(${r.id})">🗑️</button></div></div>`).join("");
+}
+function _fillForm(r){
+  document.getElementById("edit-id").value=r.id;
+  document.getElementById("f-name").value=r.name||"";
+  document.getElementById("f-cat").value=r.cat||"General";
+  ["f-emoji","f-desc","f-yield","f-video"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=r[id.replace("f-","").replace("yield","yield")]||r[id==="f-yield"?"yield":id==="f-video"?"video":id==="f-emoji"?"emoji":"desc"]||"";});
+  const fe=document.getElementById("f-emoji");if(fe)fe.value=r.emoji||"";
+  const fd=document.getElementById("f-desc");if(fd)fd.value=r.desc||"";
+  const fy=document.getElementById("f-yield");if(fy)fy.value=r.yield||"";
+  const fv=document.getElementById("f-video");if(fv)fv.value=r.video||"";
+  try{mainPhotoData=r.img||"";const prev=document.getElementById("f-img-preview"),ph=document.getElementById("f-img-placeholder");if(mainPhotoData){prev.src=mainPhotoData;prev.style.display="block";ph.style.display="none";}else{prev.style.display="none";ph.style.display="flex";}}catch(e){}
+  try{document.getElementById("ing-list").innerHTML="";(r.utensilios||r.ingredients||[]).forEach(v=>addIng(v));if(!(r.utensilios||r.ingredients||[]).length){addIng();addIng();}}catch(e){}
+  try{document.getElementById("step-list").innerHTML="";adminStepPhotos={};(r.steps||[]).forEach((s,i)=>addStep(s,(r.stepPhotos||{})[i]||"",i));if(!(r.steps||[]).length)addStep("","",0);}catch(e){}
+  try{document.getElementById("quiz-list").innerHTML="";(r.quiz||[]).forEach(q=>addQuizQ(q));}catch(e){}
+  _displayMode=r.displayMode||"carousel";toggleDisplay(_displayMode);
+}
+function editCustomRecipe(id){
+  const r=getCustomRecipes().find(x=>x.id===id);
+  if(!r){showToast("⚠️ No se encontró la formación");return;}
+  _fillForm(r);setEditMode(r.name);
+  setTimeout(()=>{const t=document.getElementById("admin-form-title");if(t)t.scrollIntoView({behavior:"smooth"});},100);
+}
+function editCurrentRecipe(){
+  if(!current)return;
+  const r=getAllRecipes().find(d=>d.id===current.id)||current;
+  stopSpeech();
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("admin").classList.add("active");
+  renderAdminList();
+  _fillForm(r);setEditMode(r.name);
+  setTimeout(()=>{const t=document.getElementById("admin-form-title");if(t)t.scrollIntoView({behavior:"smooth"});},100);
+}
+function setEditMode(name){
+  const bar=document.getElementById("admin-header-bar"),h2=document.getElementById("admin-header-title"),banner=document.getElementById("edit-mode-banner"),bn=document.getElementById("edit-mode-name"),ls=document.getElementById("admin-list-section"),sb=document.getElementById("btn-save-recipe"),cb=document.getElementById("btn-cancel-form"),bb=document.getElementById("admin-back-btn");
+  if(bar)bar.style.background="#0f3a6e";if(h2)h2.textContent="✏️ Editando formación";if(banner)banner.style.display="flex";if(bn)bn.textContent=name;if(ls)ls.style.display="none";if(sb){sb.textContent="💾 Guardar cambios";sb.style.background="#0f3a6e";}if(cb)cb.style.display="none";if(bb)bb.onclick=()=>cancelEdit();
+}
+function clearEditMode(){
+  const bar=document.getElementById("admin-header-bar"),h2=document.getElementById("admin-header-title"),banner=document.getElementById("edit-mode-banner"),ls=document.getElementById("admin-list-section"),sb=document.getElementById("btn-save-recipe"),cb=document.getElementById("btn-cancel-form"),bb=document.getElementById("admin-back-btn");
+  if(bar)bar.style.background="";if(h2)h2.textContent="➕ Nueva Formación";if(banner)banner.style.display="none";if(ls)ls.style.display="";if(sb){sb.textContent="💾 Guardar formación";sb.style.background="";}if(cb)cb.style.display="";if(bb)bb.onclick=()=>show("home");
+}
+function cancelEdit(){clearEditMode();resetAdminForm();if(current){current=getAllRecipes().find(d=>d.id===current.id)||current;show("detail");}else show("home");}
+function confirmDeleteRecipe(id){const r=getAllRecipes().find(d=>d.id===id);if(!r)return;if(confirm('¿Eliminar "'+r.name+'"? Esta acción no se puede deshacer.')){deleteCustomRecipe(id);}}
+function deleteCustomRecipe(id){const c=getCustomRecipes().filter(r=>r.id!==id);saveCustomRecipes(c);deleteFromSupabase(id);renderAdminList();updateStats();showToast("🗑️ Formación eliminada");}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
+
+// ===== PROFESSIONAL CARD =====
+function loadCardPhoto(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();r.onload=ev=>compressImg(ev.target.result,c=>{_cardPhotoData=c;const prev=document.getElementById("card-photo-preview");if(prev){prev.src=c;prev.style.display="block";}renderCardPreview();});r.readAsDataURL(file);
+}
+function renderCardChecklist(){
+  const el=document.getElementById("card-checklist");if(!el)return;
+  const all=getAllRecipes();
+  el.innerHTML=all.map(r=>`<div class="training-check-item"><input type="checkbox" id="cc_${r.id}" style="width:18px;height:18px;accent-color:#1a5ca8;flex-shrink:0;"><label for="cc_${r.id}" style="cursor:pointer;"><strong>${r.emoji||"📋"} ${r.name}</strong> <span style="color:#888;font-size:11px;">(${r.cat})</span></label></div>`).join("");
+  renderCardPreview();
+}
+function renderCardPreview(){
+  const name=(document.getElementById("card-name")||{}).value||"Empleado";
+  const role=(document.getElementById("card-role")||{}).value||"";
+  const all=getAllRecipes();
+  const checked=all.filter(r=>{const cb=document.getElementById("cc_"+r.id);return cb&&cb.checked;});
+  const photoEl=document.getElementById("card-photo-preview");
+  const hasPhoto=photoEl&&photoEl.style.display!=="none"&&_cardPhotoData;
+  const wrap=document.getElementById("card-preview-wrap"),preview=document.getElementById("card-preview");
+  if(!wrap||!preview)return;
+  wrap.style.display="block";
+  preview.innerHTML=`<div style="background:#fff;border:2px solid #1a5ca8;border-radius:12px;padding:20px;font-family:Arial,sans-serif;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #ddd;">
+      ${hasPhoto?`<img src="${_cardPhotoData}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid #1a5ca8;">`:`<div style="width:64px;height:64px;border-radius:50%;background:#1a5ca8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;flex-shrink:0;">${name.charAt(0).toUpperCase()}</div>`}
+      <div><div style="font-size:18px;font-weight:bold;color:#111;">${name}</div><div style="font-size:13px;color:#1a5ca8;">${role}</div><div style="font-size:11px;color:#888;margin-top:2px;">Les Voltes · Calella de Palafrugell</div></div>
+    </div>
+    <div style="font-size:11px;font-weight:bold;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Formaciones completadas (${checked.length}/${all.length})</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
+      ${checked.map(r=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;"><span style="color:#2e7d32;">✓</span><span>${r.emoji||""} ${r.name}</span></div>`).join("")}
+    </div>
+    <div style="margin-top:16px;padding-top:12px;border-top:1px solid #ddd;font-size:10px;color:#aaa;text-align:right;">Calau Formación · ${new Date().toLocaleDateString("es-ES")}</div>
+  </div>`;
+  const pc=document.getElementById("print-card");if(pc)pc.innerHTML=preview.innerHTML;
+}
+function printCard(){renderCardPreview();setTimeout(()=>window.print(),200);}
+
+// ===== BACKUP =====
+function downloadBackup(){
+  const custom=getCustomRecipes();let html=document.documentElement.outerHTML;
+  if(custom.length){const inj=`<script>try{if(!localStorage.getItem('calau_formacio')||!JSON.parse(localStorage.getItem('calau_formacio')).length){localStorage.setItem('calau_formacio',${JSON.stringify(JSON.stringify(custom))});}}catch(e){}<\/script>`;html=html.replace('</body>',inj+'</body>');}
+  const blob=new Blob(['<!DOCTYPE html>'+html],{type:'text/html'}),a=document.createElement('a'),d=new Date();
+  a.href=URL.createObjectURL(blob);a.download='calau_formacion_backup_'+d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0')+'.html';a.click();
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  if(localStorage.getItem("formacio_dark")==="1")document.body.classList.add("dark");
+  updateStats();initSupa();syncFromSupabase();
+  setInterval(syncFromSupabase,30000);
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)stopSpeech();});
+  window.addEventListener("pagehide",stopSpeech);
+  updatePinDisplay();
+  toggleDisplay("carousel");
+  const vr=document.getElementById("video-url-row");if(vr)vr.style.display="none";
+});
+</script>
+</body>
+</html>
